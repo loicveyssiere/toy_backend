@@ -1,0 +1,1 @@
+# This file is mandatory to force python interprets tests folder as a module

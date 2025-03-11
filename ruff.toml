@@ -1,0 +1,59 @@
+# Ruff configuration for FastAPI project
+
+# Target Python version
+target-version = "py312"  # Adjust according to your project's Python version (py39, py310, py311, etc.)
+
+# Exclude virtual environments, cache, and migrations (if using Django ORM)
+exclude = [
+    ".venv",
+    "venv",
+    "__pycache__",
+    "migrations",
+    ".git",
+    ".mypy_cache",
+    ".ruff_cache"
+]
+
+# Enable line-length enforcement (matches Black's default)
+line-length = 88
+
+# Enable built-in Ruff formatter
+[format]
+quote-style = "double"  # Prefer double quotes for consistency with FastAPI JSON style
+indent-style = "space"
+line-ending = "lf"
+
+# Enable specific linting rules
+[lint]
+select = [
+    "E",  # Pyflakes (error detection)
+    "F",  # Pyflakes (undefined variables, etc.)
+    "W",  # Pycodestyle warnings
+    "I",  # isort (import sorting)
+    "N",  # PEP8 naming conventions
+    "UP", # pyupgrade (automatic syntax upgrades)
+    "C4", # flake8-comprehensions (optimize comprehensions)
+    "B",  # flake8-bugbear (common bugs and security issues)
+    "T20", # flake8-print (avoid print statements)
+    "ASYNC", # asyncio best practices
+    #"RUF044",
+    "RUF100" # Ruff-specific rules
+]
+
+# Ignore specific rules
+ignore = [
+    "E501",  # Line length (handled by formatter)
+    "B008",  # Function call in argument defaults (acceptable in FastAPI dependency injection)
+]
+
+# Allow autofix for common issues
+fixable = ["I", "UP", "C4", "B", "T20"]
+unfixable = ["F", "E"]
+
+# Extend import sorting rules
+[lint.isort]
+known-first-party = ["app"]  # Replace "app" with your FastAPI module name
+known-third-party = ["fastapi", "pydantic", "sqlalchemy"]
+combine-as-imports = true
+section-order = ["future", "standard-library", "third-party", "first-party", "local-folder"]
+
