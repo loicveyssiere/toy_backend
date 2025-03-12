@@ -1,13 +1,15 @@
 from fastapi.testclient import TestClient
 
+from src.api.security.auth import AdminSecurity, PublicSecurity
 from src.server import app
 from src.services.book_service import BookService
 
-from .mocks.services.book_service import MockBookService
+from .mocks.book_service import MockBookService
 
 client = TestClient(app)
 
 app.dependency_overrides[BookService] = MockBookService
+app.dependency_overrides[AdminSecurity] = PublicSecurity
 
 
 def test_create_book_no_copy():

@@ -9,9 +9,9 @@ class AuthSessionManager:
         self.jwt_secret = jwt_secret
         self.jwt_algorithm = jwt_algorithm
 
-    def sign_jwt(self, user_id: str) -> str:
+    def sign_jwt(self, user_payload) -> str:
         payload = {
-            "user_id": user_id,
+            **user_payload,
             "expires": time.time() + 500
         }
         token = jwt.encode(payload, self.jwt_secret, algorithm=self.jwt_algorithm)

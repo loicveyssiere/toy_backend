@@ -44,12 +44,12 @@ class APISecurity:
     auth_session_manager: AuthSessionManager
 
     def __init__(self,
-            auth: HTTPAuthorizationCredentials = Depends(HTTPBearer()),
+            auth: HTTPAuthorizationCredentials = Depends(HTTPBearer(auto_error=False)),
             auth_session_manager: AuthSessionManager = Depends(context_manager.inject_auth_session_manager),
             user_session = Depends(UserSession)
         ):
         print("Hello from AuthSSecurityessionManager")
-        self.token = auth.credentials
+        self.token = auth.credentials if auth is not None else None
         self.user_session = user_session
         self.auth_session_manager = auth_session_manager
 
@@ -57,10 +57,15 @@ class APISecurity:
         self.handle_http_errors()
 
     def set_user_session(self):
-        raw_user = self.auth_session_manager.decode_jwt(self.token)
-        self.user_session.set_user_from_raw(raw_user)
+        if self.token is None:
+            self.user_session = None
+        else:
+            raw_user = self.auth_session_manager.decode_jwt(self.token)
+            self.user_session.set_user_from_raw(raw_user)
 
     def handle_http_errors(self):
+        if self.token is None:
+            raise HTTPException(status_code=401, detail="User not authenticated")
         if not self.user_session.is_authenticated():
             raise HTTPException(status_code=401, detail="User not authenticated")
         if self.require_admin and not self.user_session.is_admin():
@@ -69,7 +74,7 @@ class APISecurity:
 class AdminSecurity(APISecurity):
     def __init__(
         self,
-        auth: HTTPAuthorizationCredentials = Depends(HTTPBearer()),
+        auth: HTTPAuthorizationCredentials = Depends(HTTPBearer(auto_error=False)),
         auth_session_manager: AuthSessionManager = Depends(context_manager.inject_auth_session_manager),
         user_session: UserSession = Depends(UserSession),
     ):

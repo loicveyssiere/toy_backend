@@ -3,7 +3,7 @@ from typing import Annotated
 from fastapi import Depends
 from sqlalchemy import text
 
-from types.user import UserAuthenticated
+from ..types.user import UserAuthenticated
 
 from ..context import ContextManager
 from ..core.db import AsyncDatabaseClient
