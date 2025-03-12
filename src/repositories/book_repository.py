@@ -3,11 +3,10 @@ from typing import Annotated
 from fastapi import Depends
 from sqlalchemy import text
 
-from ..types.user import UserAuthenticated
-
 from ..context import ContextManager
 from ..core.db import AsyncDatabaseClient
 from ..types.book import BookCopy, BookReference
+from ..types.user import UserAuthenticated
 
 context = ContextManager()
 
@@ -19,7 +18,7 @@ class BookRepository:
     def __init__(self, connection: Annotated[AsyncDatabaseClient, Depends(context.inject_db_connection)]):
         self.connection = connection
 
-    async def create_book_reference(self, user: UserAuthenticated, book_ref: BookReference, copies=list[BookCopy]):
+    async def create_book_reference(self, user: UserAuthenticated, book_ref: BookReference, copies=list[BookCopy]) -> str:
         sql = text("INSERT INTO book_reference (title, author, published_date) VALUES (:title, :author, :published_date) RETURNING id")
         async with self.connection.session() as session:
 

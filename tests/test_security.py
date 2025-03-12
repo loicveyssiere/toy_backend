@@ -1,10 +1,10 @@
 import pytest
 from fastapi.testclient import TestClient
 
-from src.api.security.auth import APISecurity, AdminSecurity, PublicSecurity
+from src.api.security.auth import AdminSecurity, APISecurity, PublicSecurity
 from src.api.security.auth_manager import AuthSessionManager
-from src.server import app
 from src.context import ContextManager
+from src.server import app
 
 from .mocks.fake_route import router as fake_router
 
@@ -24,13 +24,11 @@ def client():
 def test_public_security_should_pass_without_token(client: TestClient):
     app.dependency_overrides[PublicSecurity] = PublicSecurity
     response = client.request("GET", "/unittest/ping/")
-
     assert response.status_code == 200
 
 def test_user_security_should_fail_without_token(client: TestClient):
     app.dependency_overrides[PublicSecurity] = APISecurity
     response = client.request("GET", "/unittest/ping/")
-
     assert response.status_code == 401
 
 def test_user_security_should_fail_on_invalid_bearer(client: TestClient):
