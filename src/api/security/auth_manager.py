@@ -6,7 +6,6 @@ import jwt
 
 class AuthSessionManager:
     def __init__(self, jwt_secret: str, jwt_algorithm: str = "HS256"):
-        print("Hello from AuthSessionManager")
         self.jwt_secret = jwt_secret
         self.jwt_algorithm = jwt_algorithm
 

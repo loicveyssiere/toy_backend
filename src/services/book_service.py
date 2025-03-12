@@ -16,6 +16,9 @@ class IBookService(ABC):
     async def create_book_reference(self, book_ref: BookReference, copies: list[BookCopy]):
         ...
 
+    @abstractmethod
+    async def register_book_copies(self, ref_id: str, copies: list[BookCopy]):
+        ...
 
 class BookService(IBookService):
 
@@ -33,5 +36,8 @@ class BookService(IBookService):
 
     async def create_book_reference(self, book_ref: BookReference, copies: list[BookCopy]):
         print(self.user_session.get_user())
-        ref_id = await self.book_repository.create_book_reference(book_ref)
-        await self.book_repository.register_book_copies(ref_id, copies)
+        ref_id = await self.book_repository.create_book_reference(self.user_session.user, book_ref)
+        await self.book_repository.register_book_copies(self.user_session.user, ref_id, copies)
+
+    async def register_book_copies(self, ref_id: str, copies: list[BookCopy]):
+        await self.book_repository.register_book_copies(self.user_session.user, ref_id, copies)

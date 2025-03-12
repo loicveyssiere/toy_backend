@@ -15,7 +15,6 @@ async def create_book_reference(
     create_book_reference: CreateBookReferenceRequest,
     book_service: Annotated[IBookService, Depends(BookService)]
 ):
-    print("test")
     book_ref = BookReference()
     book_ref.title = create_book_reference.title
     book_ref.author = create_book_reference.author
@@ -35,9 +34,12 @@ async def create_book_reference(
 
 @router.post("/{book_reference_id}/register", dependencies=[Depends(AdminSecurity)])
 async def register_book_copy(
-    register_book_copy: RegisterBookCopyRequest
+    register_book_copy: RegisterBookCopyRequest,
+    book_service: Annotated[IBookService, Depends(BookService)]
 ):
-    pass
+    copy = BookCopy()
+    copy.condition = register_book_copy.copy.condition
+    book_service.register_book_copies(register_book_copy.book_reference_id, [copy])
 
 @router.get("/")
 async def public():
