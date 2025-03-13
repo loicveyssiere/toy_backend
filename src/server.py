@@ -1,6 +1,7 @@
 from fastapi import Depends, FastAPI
 
 from .api.book.routes import router as book_router
+from .api.loan.routes import router as loan_router
 from .api.security.auth_manager import AuthSessionManager
 from .context import ContextManager
 from .core.config import settings
@@ -19,3 +20,4 @@ app = FastAPI(
 )
 
 app.include_router(book_router, prefix="/api/books")
+app.include_router(loan_router, prefix="/api/loans")

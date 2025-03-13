@@ -11,6 +11,7 @@ drop type if exists role_type;
 
 CREATE TYPE condition_type AS ENUM ('new', 'good', 'acceptable', 'damaged', 'fragile', 'bad');
 CREATE TYPE role_type as ENUM ('admin', 'user');
+CREATE TYPE load_status_type as ENUM ('borrowed', 'returned', 'lost');
 
 CREATE TABLE IF NOT EXISTS "user" (
     id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
@@ -58,6 +59,7 @@ CREATE TABLE IF NOT EXISTS "book_loan" (
     end_date TIMESTAMP WITHOUT TIME ZONE DEFAULT NOW(),
     book_copy_id UUID NOT NULL,
     account_id UUID NOT NULL,
+    "status" load_status_type NOT NULL,
     CONSTRAINT fk_book_copy_id
         FOREIGN KEY (book_copy_id) 
         REFERENCES "book_copy" (id),

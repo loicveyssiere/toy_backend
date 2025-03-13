@@ -23,6 +23,7 @@ class UserSession:
             self.raw_user = raw_user
             self.user = UserAuthenticated()
             #TODO check object
+            self.user.account_id = self.raw_user["account_id"]
             self.user.name = self.raw_user["name"]
             self.user.role = self.raw_user["role"]
 
